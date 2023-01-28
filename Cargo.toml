@@ -6,3 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rich-sdl2-rust = { git = "https://github.com/KisaragiEffective/rich-sdl2-rust", branch = "feat/add-windowevent-take-focus" }
