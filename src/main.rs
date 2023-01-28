@@ -1,10 +1,21 @@
+// wrench2.png is taken from https://commons.wikimedia.org/wiki/File:Wrench-screwdriver-icon.png
+// It is CC0
+
+// This code is licensed under MIT License
+
+use std::borrow::{Borrow};
+use std::cell::RefCell;
+use std::ops::{DerefMut};
 use std::process::exit;
+use rich_sdl2_image_rust::{Img, ImgInitFlag};
+use rich_sdl2_image_rust::surface::ImgSurface;
 use rich_sdl2_rust::{delay, EventBox, Sdl, Video};
 use rich_sdl2_rust::color::Rgb;
-use rich_sdl2_rust::geo::Rect;
+use rich_sdl2_rust::geo::{Rect};
 use rich_sdl2_rust::renderer::pen::Pen;
-use rich_sdl2_rust::renderer::Renderer;
-use rich_sdl2_rust::window::WindowBuilder;
+use rich_sdl2_rust::renderer::{PasteExt, Renderer};
+use rich_sdl2_rust::texture::Texture;
+use rich_sdl2_rust::window::{WindowBuilder};
 
 fn main() {
     let sdl = Sdl::new();
@@ -17,36 +28,80 @@ fn main() {
         .build()
         .new_window(&video);
     let renderer = Renderer::new(&window);
-
-    macro_rules! use_pen {
-        ($closure:expr) => {
-            const fn assert<T: FnOnce(&Pen)>(_: &T) {}
-
-            assert(&$closure);
-            let pen = Pen::new(&renderer);
-            $closure(&pen);
-            drop(pen);
-        };
-    }
-
     let mut event_box = EventBox::new(&video);
-    event_box.handle_quit(Box::new(|x| {
+    event_box.handle_quit(Box::new(|_| {
         println!("exit");
         exit(0)
     }));
 
-    use_pen!(|pen: &Pen| {
-        pen.set_color(Rgb::from(0xFFFFFF));
-        pen.fill_rect(Rect::from_xs_ys([0, 100], [0, 100]));
-    });
+    WhiteSquare::new(&renderer).render();
 
     window.show();
-    loop {
-        event_box.poll();
-        use_pen!(|pen: &Pen| {
-            pen.set_color(Rgb::from(0xFF0000));
-            pen.fill_rect(Rect::from_xs_ys([0, 100], [0, 100]));
-        });
-        delay(16);
+    {
+        let x = RefCell::new(SettingButton::new(&renderer));
+        let b = x.borrow_mut().deref_mut() as *mut SettingButton;
+        loop {
+            event_box.poll();
+            unsafe { b.as_mut() }.unwrap().draw();
+            delay(16);
+        }
+    }
+}
+
+struct SettingButton<'renderer, 'img> {
+    _selected: bool,
+    img: Img,
+    cached_texture: Option<Texture<'renderer>>,
+    cached_surface: Option<ImgSurface<'img>>,
+    renderer: &'renderer Renderer<'renderer>,
+}
+
+impl<'r: 'i, 'i> SettingButton<'r, 'i> {
+    fn new(renderer: &'r Renderer) -> Self {
+        let img = Img::new(ImgInitFlag::PNG).expect("Img");
+
+        Self {
+            _selected: false,
+            img,
+            cached_texture: None,
+            cached_surface: None,
+            renderer,
+        }
+    }
+
+    fn draw(&'r mut self) {
+        // TODO: why image does not appear?
+        let un_cached = self.cached_surface.is_none();
+
+        if un_cached {
+            self.cached_surface.replace(ImgSurface::new(&self.img, "assets/wrench2.png", None).expect("ImgSurface"));
+        }
+
+        let un_cached = self.cached_texture.as_ref().borrow().is_none();
+        if un_cached {
+            self.cached_texture.replace(Texture::from_surface(self.renderer, self.cached_surface.as_ref().unwrap()));
+        }
+
+        let temp_ref = self.cached_texture.as_ref().unwrap();
+        self.renderer.paste(temp_ref, None);
+    }
+}
+
+struct WhiteSquare<'renderer> {
+    renderer: &'renderer Renderer<'renderer>,
+}
+
+impl<'r> WhiteSquare<'r> {
+    fn new(renderer: &'r Renderer) -> Self {
+        Self {
+            renderer
+        }
+    }
+
+    fn render(&self) {
+        let pen = Pen::new(self.renderer);
+        pen.set_color(Rgb::from(0xFFFFFF));
+        pen.fill_rect(Rect::from_xs_ys([0, 100], [0, 100]));
+        drop(pen);
     }
 }

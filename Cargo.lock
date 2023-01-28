@@ -61,6 +61,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "bindgen"
+version = "0.63.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "36d860121800b2a9a94f9b5604b332d5cffb234ce17609ea479d723dbc9d3885"
+dependencies = [
+ "bitflags",
+ "cexpr",
+ "clang-sys",
+ "lazy_static",
+ "lazycell",
+ "log",
+ "peeking_take_while",
+ "proc-macro2",
+ "quote",
+ "regex",
+ "rustc-hash",
+ "shlex",
+ "syn",
+ "which",
+]
+
+[[package]]
 name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -163,9 +185,9 @@ dependencies = [
 
 [[package]]
 name = "git2"
-version = "0.14.4"
+version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d0155506aab710a86160ddb504a480d2964d7ab5b9e62419be69e0032bc5931c"
+checksum = "ccf7f68c2995f392c49fffb4f95ae2c873297830eb25c6bc4c114ce8f4562acc"
 dependencies = [
  "bitflags",
  "libc",
@@ -236,9 +258,9 @@ checksum = "201de327520df007757c1f0adce6e827fe8562fbc28bfd9c15571c66ca1f5f79"
 
 [[package]]
 name = "libgit2-sys"
-version = "0.13.5+1.4.5"
+version = "0.14.2+1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "51e5ea06c26926f1002dd553fded6cfcdc9784c1f60feeb58368b4d9b07b6dba"
+checksum = "7f3d95f6b51075fe9810a7ae22c7095f12b98005ab364d8544797a825ce946a4"
 dependencies = [
  "cc",
  "libc",
@@ -450,17 +472,29 @@ checksum = "456c603be3e8d448b072f410900c09faf164fbce2d480456f50eea6e25f9c848"
 
 [[package]]
 name = "retry"
-version = "1.3.1"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ac95c60a949a63fd2822f4964939662d8f2c16c4fa0624fd954bc6e703b9a3f6"
+checksum = "9166d72162de3575f950507683fac47e30f6f2c3836b71b7fbc61aa517c9c5f4"
 dependencies = [
  "rand",
 ]
 
 [[package]]
+name = "rich-sdl2-image-rust"
+version = "0.5.0"
+source = "git+https://github.com/KisaragiEffective/rich-sdl2-image-rust?branch=local/nightly#905bfdb0082b345f54f7e84db76cd35c8276348c"
+dependencies = [
+ "bindgen 0.59.2",
+ "bitflags",
+ "git2",
+ "rich-sdl2-rust",
+ "static_assertions",
+]
+
+[[package]]
 name = "rich-sdl2-rust"
-version = "0.11.4"
-source = "git+https://github.com/KisaragiEffective/rich-sdl2-rust?branch=feat/add-windowevent-take-focus#dd833cefa32a6ba0344f20af40117c1c7fe7df33"
+version = "0.11.5"
+source = "git+https://github.com/MikuroXina/rich-sdl2-rust?branch=main#7f364cfecfb67aeed109575c252bf0e0824da483"
 dependencies = [
  "bitflags",
  "raw-window-handle 0.3.4",
@@ -471,10 +505,10 @@ dependencies = [
 
 [[package]]
 name = "rich-sdl2-rust-sys"
-version = "0.2.5"
-source = "git+https://github.com/KisaragiEffective/rich-sdl2-rust?branch=feat/add-windowevent-take-focus#dd833cefa32a6ba0344f20af40117c1c7fe7df33"
+version = "0.2.6"
+source = "git+https://github.com/MikuroXina/rich-sdl2-rust?branch=main#7f364cfecfb67aeed109575c252bf0e0824da483"
 dependencies = [
- "bindgen",
+ "bindgen 0.63.0",
  "git2",
  "pkg-config",
  "retry",
@@ -490,6 +524,7 @@ checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 name = "sdl2-practice"
 version = "0.1.0"
 dependencies = [
+ "rich-sdl2-image-rust",
  "rich-sdl2-rust",
 ]
 
@@ -557,9 +592,9 @@ checksum = "cda74da7e1a664f795bb1f8a87ec406fb89a02522cf6e50620d016add6dbbf5c"
 
 [[package]]
 name = "typed-builder"
-version = "0.9.1"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a46ee5bd706ff79131be9c94e7edcb82b703c487766a114434e5790361cf08c5"
+checksum = "47a126a40dbff39e8320900cd61b8de053a2706e1f782cd27145792feb8fd41e"
 dependencies = [
  "proc-macro2",
  "quote",
