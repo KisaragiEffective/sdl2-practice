@@ -7,10 +7,9 @@ use std::borrow::{Borrow};
 use std::cell::RefCell;
 use std::ops::{DerefMut};
 use std::process::exit;
-use rich_sdl2_image_rust::{Img, ImgInitFlag};
-use rich_sdl2_image_rust::surface::ImgSurface;
+use rich_sdl2_rust::image::{Img, ImgInitFlag};
+use rich_sdl2_rust::image::surface::ImgSurface;
 use rich_sdl2_rust::{delay, EventBox, Sdl, Video};
-use rich_sdl2_rust::color::Rgb;
 use rich_sdl2_rust::geo::{Rect};
 use rich_sdl2_rust::renderer::pen::Pen;
 use rich_sdl2_rust::renderer::{PasteExt, Renderer};
@@ -33,8 +32,6 @@ fn main() {
         println!("exit");
         exit(0)
     }));
-
-    WhiteSquare::new(&renderer).render();
 
     window.show();
     {
@@ -83,25 +80,9 @@ impl<'r: 'i, 'i> SettingButton<'r, 'i> {
         }
 
         let temp_ref = self.cached_texture.as_ref().unwrap();
-        self.renderer.paste(temp_ref, None);
-    }
-}
+        self.renderer.paste(temp_ref, Some(Rect::from_xs_ys([0, 300], [0, 300])));
 
-struct WhiteSquare<'renderer> {
-    renderer: &'renderer Renderer<'renderer>,
-}
-
-impl<'r> WhiteSquare<'r> {
-    fn new(renderer: &'r Renderer) -> Self {
-        Self {
-            renderer
-        }
-    }
-
-    fn render(&self) {
         let pen = Pen::new(self.renderer);
-        pen.set_color(Rgb::from(0xFFFFFF));
-        pen.fill_rect(Rect::from_xs_ys([0, 100], [0, 100]));
         drop(pen);
     }
 }

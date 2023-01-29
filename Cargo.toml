@@ -6,5 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rich-sdl2-image-rust = { git = "https://github.com/KisaragiEffective/rich-sdl2-image-rust", branch = "local/nightly", version = "0.5.0" }
-rich-sdl2-rust = { git = "https://github.com/MikuroXina/rich-sdl2-rust", branch = "main", features = ["ttf"], version = "0.11.5" }
+rich-sdl2-rust = { features = ["ttf", "image"], version = "0.12.1" }
